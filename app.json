@@ -24,11 +24,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.assignment_checker.snack7"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "(project2)"
+    "description": "(project2)",
+    "extra": {
+      "eas": {
+        "projectId": "1e93ff13-09b5-47e6-93cf-d8fd277cd3c4"
+      }
+    }
   }
 }
