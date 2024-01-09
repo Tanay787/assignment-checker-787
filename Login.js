@@ -1,5 +1,14 @@
 import React, { useState, useContext } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  SafeAreaView,
+  StatusBar,
+  Alert,
+} from 'react-native';
 import firebase from 'firebase';
 import AuthContext from './AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,18 +16,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {setUid} = useContext(AuthContext);
+  const { setUid } = useContext(AuthContext);
 
   // Inside the handleLogin function in Login.js
   const handleLogin = async () => {
     try {
-      const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const userCredential = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
       console.log('userCredentials: ', userCredential);
       const uid = userCredential.user.uid;
       console.log('uid: ', uid);
       setUid(uid);
-      await AsyncStorage.setItem('uid', uid);  //Setting UId
-      
+      await AsyncStorage.setItem('uid', uid); //Setting UId
+
       let role = 'Student'; // Default role is Student
 
       // Check if the email matches the HOD email
@@ -28,7 +39,10 @@ const Login = ({ navigation }) => {
       }
 
       // Check if the email belongs to a Teacher
-      const teacherQuery = firebase.firestore().collection('Teacher').where('email', '==', email);
+      const teacherQuery = firebase
+        .firestore()
+        .collection('Teacher')
+        .where('email', '==', email);
       const teacherSnapshot = await teacherQuery.get();
       if (!teacherSnapshot.empty) {
         role = 'Teacher';
@@ -59,7 +73,6 @@ const Login = ({ navigation }) => {
             .set({
               email: email,
               FormSubmit: 'No',
-              teacherID: studentRef.id,
             })
             .then(() => {
               console.log('Student added to Firestore');
@@ -81,7 +94,7 @@ const Login = ({ navigation }) => {
             routes: [
               {
                 name: 'onBoardingStudent',
-                params: { email: email},
+                params: { email: email },
               },
             ],
           });
@@ -92,51 +105,97 @@ const Login = ({ navigation }) => {
     }
   };
 
+  const handleSignup = () => {
+    navigation.navigate('Signup');
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor="#1e1e24" barStyle="light-content" />
+      <Text style={styles.title}>Login</Text>
+      <Text style={styles.tagline}>Welcome back!</Text>
+      <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
-          placeholder="Email"
+          style={styles.inputField}
           value={email}
           onChangeText={(text) => setEmail(text)}
+          placeholder="Email"
+          placeholderTextColor="#8d8d93"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
         />
         <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
+          style={styles.inputField}
           value={password}
           onChangeText={(text) => setPassword(text)}
+          placeholder="Password"
+          placeholderTextColor="#8d8d93"
+          keyboardType="default"
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry={true}
         />
-        <Button title="Login" onPress={handleLogin} />
       </View>
-    </View>
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
+        <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#1e1e24',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  card: {
-    width: '80%',
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  input: {
+  title: {
+    fontSize: 30,
+    color: '#e5e5e5ff',
+    fontFamily: 'Nexa',
     marginBottom: 10,
+  },
+  tagline: {
+    fontSize: 16,
+    color: '#fca311ff',
+    marginBottom: 20,
+  },
+  inputContainer: {
+    width: '80%',
+  },
+  inputField: {
+    backgroundColor: '#1e1e24',
+    borderBottomColor: '#e5e5e5ff',
+    borderBottomWidth: 1,
+    color: '#e5e5e5ff',
+    fontSize: 16,
     padding: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
+    marginBottom: 20,
+  },
+  loginButton: {
+    width: '80%',
+    backgroundColor: '#2d2d38',
+    borderRadius: 30,
+    padding: 10,
+    marginBottom: 20,
+  },
+  loginText: {
+    color: '#e5e5e5ff',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  signupButton: {
+    width: '80%',
+  },
+  signupText: {
+    color: '#fca311ff',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 
