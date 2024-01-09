@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Button, TextInput, Text } from 'react-native';
 import firebase from 'firebase';
 import { NavigationContainer } from '@react-navigation/native';
-import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Font from 'expo-font';
@@ -70,18 +68,28 @@ export default function App() {
     getStoredUserSession();
   }, []);
 
-   if (!fontLoaded) {
-   return null;
- }
+
+  if (!fontLoaded) {
+    return null;
+  }
 
   return (
     <AuthContext.Provider value={{ uid, setUid, role, setRole }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            headerTintColor: '#ffffff',
+            headerStyle: { backgroundColor: '#1e1e24' },
+          }}>
           <Stack.Screen name="Create" component={CreateAssignment} />
           <Stack.Screen name="Manage" component={ManageAssignments} />
           <Stack.Screen name="Alloted" component={AllotedStudents} />
-          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="Hod" component={Hod} />
