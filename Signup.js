@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert ,StyleSheet} from 'react-native';
+import {
+ StyleSheet,
+ Text,
+ View,
+ TouchableOpacity,
+ TextInput,
+ SafeAreaView,
+ StatusBar,
+ Alert
+} from 'react-native';
 import firebase from 'firebase';
 
-const Signup = () => {
+const Signup = ({ navigation }) =>{
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -18,51 +27,98 @@ const Signup = () => {
       });
   };
 
+    const handleLogin = () => {
+    navigation.navigate('Login');
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.card}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor="#1e1e24" barStyle="light-content" />
+      <Text style={styles.title}>Sign up</Text>
+      <Text style={styles.tagline}>Welcome back!</Text>
+      <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
-          placeholder="Email"
+          style={styles.inputField}
           value={email}
           onChangeText={(text) => setEmail(text)}
+          placeholder="Email"
+          placeholderTextColor="#8d8d93"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
         />
         <TextInput
-          style={styles.input}
-          placeholder="Password"
-          secureTextEntry
+          style={styles.inputField}
           value={password}
           onChangeText={(text) => setPassword(text)}
+          placeholder="Password"
+          placeholderTextColor="#8d8d93"
+          keyboardType="default"
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry={true}
         />
-        <Button title="Signup" onPress={handleSignup} />
       </View>
-    </View>
+      <TouchableOpacity style={styles.signUpButton} onPress={handleSignup}>
+        <Text style={styles.signUpText}>Signup</Text>
+      </TouchableOpacity>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginText}>Already have an Account?</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
+
 const styles = StyleSheet.create({
-  container: {
+ container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#1e1e24',
     alignItems: 'center',
-  },
-  card: {
-    width: '80%',
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  input: {
+    justifyContent: 'center',
+ },
+ title: {
+    fontSize: 30,
+    color: '#e5e5e5ff',
+    fontFamily: 'Nexa',
     marginBottom: 10,
+ },
+ tagline: {
+    fontSize: 16,
+    color: '#fca311ff',
+    marginBottom: 20,
+ },
+ inputContainer: {
+    width: '80%',
+ },
+ inputField: {
+    backgroundColor: '#1e1e24',
+    borderBottomColor: '#e5e5e5ff',
+    borderBottomWidth: 1,
+    color: '#e5e5e5ff',
+    fontSize: 16,
     padding: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
+    marginBottom: 20,
+ },
+ signUpButton: {
+    width: '80%',
+    backgroundColor: '#2d2d38',
+    borderRadius: 30,
+    padding: 10,
+    marginBottom: 20,
+ },
+ signUpText: {
+    color: '#e5e5e5ff',
+    fontSize: 18,
+    textAlign: 'center',
+ },
+   loginButton: {
+    width: '80%',
+  },
+  loginText: {
+    color: '#fca311ff',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 
