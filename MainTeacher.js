@@ -52,17 +52,17 @@ const MainTeacher = ({ navigation, route }) => {
       .signOut()
       .then(() => {
         // Navigate to the Splash screen after logout
-      })
+      });
     try {
       await AsyncStorage.removeItem('isLoggedIn');
       await AsyncStorage.removeItem('role');
       // Add any additional AsyncStorage items to remove here
 
       // Navigate to the Home screen or any other desired screen
-       navigation.reset({
-                index: 0,
-                routes: [{ name: 'Home' }],
-              });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
     } catch (error) {
       console.error('Error logging out:', error);
     }
